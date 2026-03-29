@@ -40,9 +40,9 @@
     <header class="hero">
         <div class="hero-content">
             <div class="profile-avatar-container">
-                <img id="userAvatar"
-                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                    alt="John America Avatar" class="profile-avatar loading-shimmer">
+                <!-- SSG:AVATAR -->
+                <img id="userAvatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="John America Avatar" class="profile-avatar loading-shimmer">
+                <!-- /SSG:AVATAR -->
             </div>
             <h1 class="glitch" data-text="JOHN AMERICA">JOHN AMERICA</h1>
             <p class="subtitle">Roblox Quality Assurance</p>
@@ -50,7 +50,9 @@
                 <i class="fas fa-globe-americas icon-ruby"></i>
                 <div class="grand-total-text">
                     <span class="label">Total Visits Contributed To</span>
+                    <!-- SSG:TOTAL_VISITS -->
                     <span id="grandTotalVisits" class="value">Loading...</span>
+                    <!-- /SSG:TOTAL_VISITS -->
                 </div>
             </div>
         </div>
@@ -67,7 +69,9 @@
                 contributed to.</p>
 
             <div id="gamesGrid" class="games-grid">
-                <!-- Game cards will be dynamically injected here via script.js -->
+                <!-- SSG:GAMES_GRID -->
+                <!-- Game cards will be dynamically injected here... -->
+                <!-- /SSG:GAMES_GRID -->
             </div>
         </section>
 
@@ -81,8 +85,12 @@
                             alt="Roblox" style="filter: invert(1);"></div>
                     <div class="card-info">
                         <h3>Roblox Profile</h3>
+                        <!-- SSG:USERNAME -->
                         <p id="robloxUsername">Loading username...</p>
+                        <!-- /SSG:USERNAME -->
+                        <!-- SSG:DISPLAY_NAME -->
                         <span id="robloxDisplayName" class="sub-handle">@JohhAmerica</span>
+                        <!-- /SSG:DISPLAY_NAME -->
                     </div>
                     <i class="fas fa-external-link-alt external-icon"></i>
                 </a>
