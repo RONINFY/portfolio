@@ -27,3 +27,4 @@ jobs:
           action: "upload"
           app_location: ""         # where your source is
           output_location: ""       # build output (set if needed)
+          skip_app_build: true
