@@ -10,6 +10,26 @@ const formatFullNumber = (num) => {
     return num.toLocaleString();
 };
 
+// Dynamic Count-Up Animation Helper
+const animateValue = (obj, start, end, duration) => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        // easeOutQuart for smooth deceleration
+        const easeProgress = 1 - Math.pow(1 - progress, 4);
+        const currentVal = Math.floor(easeProgress * (end - start) + start);
+        obj.textContent = formatFullNumber(currentVal);
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            obj.textContent = formatFullNumber(end);
+        }
+    };
+    window.requestAnimationFrame(step);
+};
+
 // Core Application Logic
 class PortfolioApp {
     constructor() {
@@ -53,17 +73,18 @@ class PortfolioApp {
     }
 
     updateUI() {
-        // Update Grand Total with an animation
+        // Update Grand Total with a dynamic counting animation (2 seconds)
         const totalVisitsEl = document.getElementById('grandTotalVisits');
-        totalVisitsEl.textContent = formatFullNumber(this.grandTotalVisits);
+        animateValue(totalVisitsEl, 0, this.grandTotalVisits, 2000);
 
         // Render Cards with DocumentFragment for performance
         const grid = document.getElementById('gamesGrid');
         const fragment = document.createDocumentFragment();
 
-        this.gamesData.forEach(game => {
+        this.gamesData.forEach((game, index) => {
             const card = document.createElement('div');
             card.className = 'game-card';
+            card.style.animationDelay = `${index * 0.15}s`; // staggered entry animation
             card.onclick = () => window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
             card.style.cursor = 'pointer';
 
