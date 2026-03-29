@@ -2,6 +2,8 @@ name: Deploy Static Web App
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -13,6 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Generate Static Data
+        run: node scripts/build-data.js
 
       - name: Build and Deploy
         uses: Azure/static-web-apps-deploy@v1
