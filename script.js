@@ -11,8 +11,8 @@ const PORTFOLIO_GAMES = [
 
 // Proxy configuration to handle CORS issues cleanly
 const getProxiedUrl = (url) => {
-    // Use roproxy.com to directly proxy Roblox APIs without severe rate limits
-    return url.replace('.roblox.com', '.roproxy.com');
+    // Use corsproxy.io as a reliable proxy since roproxy is frequently down/rate-limited
+    return `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
 };
 
 // Formatting helpers
