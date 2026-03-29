@@ -1,18 +1,18 @@
 // Configuration
 const ROBLOX_USER_ID = 9296222240; // John America
 
-// Portfolio Games List (Using Place IDs as they are easier to find)
+// Portfolio Games List (Optimized with Universe IDs to save API roundtrips for static hosting)
 const PORTFOLIO_GAMES = [
-    { placeId: 136577413998809, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // Build Plane For Brainrots
-    { placeId: 124910815181368, role: 'Alpha Tester', description: 'Evaluated core gameplay loops during alpha test.' }, // Pillow Battles
-    { placeId: 109021167563361, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during beta test' }, // Build a Tree Factory
-    { placeId: 122676777943933, role: 'Beta Tester', description: 'Helped identify functional bugs during beta test.' } // shinjuku shenanagins 
+    { universeId: 9907858048, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // Build Plane For Brainrots
+    { universeId: 9092720426, role: 'Alpha Tester', description: 'Evaluated core gameplay loops during alpha test.' }, // Pillow Battles
+    { universeId: 9898476119, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during beta test' }, // Build a Tree Factory
+    { universeId: 9715827305, role: 'Beta Tester', description: 'Helped identify functional bugs during beta test.' } // shinjuku shenanagins 
 ];
 
-// Fallback proxy list to ensure reliability
+// Proxy configuration to handle CORS issues cleanly
 const getProxiedUrl = (url) => {
-    // Utilize allorigins as it is one of the only free proxies that bypasses null origin limits explicitly for local files
-    return `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+    // Use roproxy.com to directly proxy Roblox APIs without severe rate limits
+    return url.replace('.roblox.com', '.roproxy.com');
 };
 
 // Formatting helpers
@@ -83,24 +83,18 @@ class PortfolioApp {
 
     async loadGamesData() {
         try {
-            // Step 1: Map PlaceIds to UniverseIds
-            const universePromises = PORTFOLIO_GAMES.map(async (game) => {
-                const res = await fetch(getProxiedUrl(`https://apis.roblox.com/universes/v1/places/${game.placeId}/universe`));
-                const data = await res.json();
-                if (data.universeId) {
-                    this.universeRoleMap[data.universeId] = game;
-                    return data.universeId;
-                }
-                return null;
+            // Static Site Optimization: Use pre-cached Universe IDs to avoid CORS & proxy errors 
+            // and eliminate one network sequentially chained trip.
+            const universeIds = PORTFOLIO_GAMES.map((game) => {
+                this.universeRoleMap[game.universeId] = game;
+                return game.universeId;
             });
 
-            const universeIdsRaw = await Promise.all(universePromises);
-            const universeIds = universeIdsRaw.filter(id => id !== null);
             const csvUniverses = universeIds.join(',');
 
             if (universeIds.length === 0) return;
 
-            // Step 2: Fetch game details, icons, and votes
+            // Fetch game details, icons, and votes
             await this.fetchAndRenderGameMetrics(csvUniverses);
 
         } catch (error) {
