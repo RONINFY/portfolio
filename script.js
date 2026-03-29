@@ -73,9 +73,9 @@ class PortfolioApp {
     }
 
     updateUI() {
-        // Update Grand Total with a dynamic counting animation (2 seconds)
+        // Update Grand Total with a dynamic counting animation (0.5 seconds)
         const totalVisitsEl = document.getElementById('grandTotalVisits');
-        animateValue(totalVisitsEl, 0, this.grandTotalVisits, 2000);
+        animateValue(totalVisitsEl, 0, this.grandTotalVisits, 400);
 
         // Render Cards with DocumentFragment for performance
         const grid = document.getElementById('gamesGrid');
@@ -84,7 +84,7 @@ class PortfolioApp {
         this.gamesData.forEach((game, index) => {
             const card = document.createElement('div');
             card.className = 'game-card';
-            card.style.animationDelay = `${index * 0.15}s`; // staggered entry animation
+            card.style.animationDelay = `${index * 0.04}s`; // staggered entry animation
             card.onclick = () => window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
             card.style.cursor = 'pointer';
 
