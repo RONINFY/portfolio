@@ -42,11 +42,7 @@ class PortfolioApp {
             this.loadGamesData()
         ]);
 
-        // Start auto-refresh interval (every 60 seconds)
-        setInterval(() => {
-            console.log("Auto-refreshing live data...");
-            this.refreshGamesData();
-        }, 60000);
+        // Fetches data once on initial load
     }
 
     async fetchUserProfile() {
@@ -103,13 +99,7 @@ class PortfolioApp {
         }
     }
 
-    async refreshGamesData() {
-        const universeIds = Object.keys(this.universeRoleMap);
-        if (universeIds.length === 0) return;
 
-        const csvUniverses = universeIds.join(',');
-        await this.fetchAndRenderGameMetrics(csvUniverses);
-    }
 
     async fetchAndRenderGameMetrics(csvUniverses) {
         // Fetch Details, Icons, and Votes concurrently for faster load speeds
