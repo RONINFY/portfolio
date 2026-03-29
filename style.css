@@ -134,12 +134,14 @@ h1.glitch {
     display: flex;
     align-items: center;
     gap: 1rem;
+    will-change: transform;
     transform: translateY(0);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .grand-total-container:hover {
     transform: translateY(-5px);
+    border-color: rgba(217, 28, 41, 0.8);
     box-shadow: 0 5px 30px var(--crimson-glow);
 }
 
@@ -181,6 +183,8 @@ h1.glitch {
 
 .section {
     margin-bottom: 5rem;
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
 }
 
 .section-title {
@@ -237,7 +241,10 @@ h1.glitch {
     border-radius: 24px;
     overflow: hidden;
     backdrop-filter: blur(10px);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform, opacity;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                border-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     opacity: 0;
     transform: translateY(30px);
@@ -443,22 +450,22 @@ footer {
 @keyframes pulsing { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 90, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 77, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 90, 0); } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Helpers */
+/* GPU-Accelerated Shimmer Helper */
 .loading-shimmer {
     background: #0f214f;
-    background-image: linear-gradient(to right, #0f214f 0%, #162a5c 20%, #0f214f 40%, #0f214f 100%);
-    background-repeat: no-repeat;
-    background-size: 800px 100%;
-    animation-duration: 1.5s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: placeholderShimmer;
-    animation-timing-function: linear;
+    position: relative;
+    overflow: hidden;
 }
-
-@keyframes placeholderShimmer {
-    0% { background-position: -468px 0; }
-    100% { background-position: 468px 0; }
+.loading-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(22, 42, 92, 0.8) 50%, transparent 100%);
+    animation: shimmer 1.5s infinite linear;
+}
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
 }
 
 @media (max-width: 768px) {

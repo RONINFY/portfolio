@@ -5,19 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>John America - Premier Roblox QA</title>
+    <meta name="description" content="Portfolio of John America, a premier Quality Assurance specialist for Roblox games. Explore real-time live metrics and contributions.">
+    <meta name="keywords" content="Roblox, Quality Assurance, QA, Tester, Portfolio, John America">
+    <meta name="author" content="John America">
+    <!-- Open Graph for Discord/Facebook embeds -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="John America • Premier Roblox QA">
+    <meta property="og:description" content="Explore my professional Quality Assurance contributions and live metrics across the Roblox platform.">
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="John America • Premier Roblox QA">
+    <meta name="twitter:description" content="Explore my professional Quality Assurance contributions and live metrics across the Roblox platform.">
+    <meta name="theme-color" content="#050a15">
+
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://api.allorigins.win">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <!-- FontAwesome for Icons -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style"
-        onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    </noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+    <!-- Defer main script execution until document paints -->
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -64,7 +75,7 @@
         <section class="section contact-section">
             <h2 class="section-title">Connect With Me</h2>
             <div class="contact-cards">
-                <a href="https://www.roblox.com/users/9296222240/profile" target="_blank" class="contact-card roblox">
+                <a href="https://www.roblox.com/users/9296222240/profile" target="_blank" rel="noopener noreferrer" class="contact-card roblox" aria-label="Visit John America's Roblox Profile">
                     <div class="card-icon"><img
                             src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg"
                             alt="Roblox" style="filter: invert(1);"></div>
@@ -83,8 +94,8 @@
                         <p>jxhnamerica</p>
                         <span class="sub-handle">Developer Network</span>
                     </div>
-                    <button class="copy-btn" onclick="copyDiscord()" title="Copy Discord ID"><i
-                            class="fas fa-copy"></i></button>
+                    <button class="copy-btn" onclick="copyDiscord()" title="Copy Discord ID" aria-label="Copy Discord Identity"><i
+                            class="fas fa-copy" aria-hidden="true"></i></button>
                 </div>
             </div>
         </section>
@@ -94,8 +105,6 @@
         <p>&copy; 2026 John America • Premier Quality Assurance</p>
         <p class="footer-sub">Stats dynamically fetched from Roblox Open Cloud</p>
     </footer>
-
-    <script src="script.js"></script>
 </body>
 
 </html>

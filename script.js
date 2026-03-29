@@ -40,36 +40,53 @@ class PortfolioApp {
 
     async init() {
         try {
+            // Check local storage for instant loading first
+            const cachedData = localStorage.getItem('portfolioData_v1');
+            if (cachedData) {
+                try {
+                    const data = JSON.parse(cachedData);
+                    this.populateData(data);
+                } catch(e) { console.error("Cache parsing error", e); }
+            }
+
             const res = await fetch('./data.json');
             if (res.ok) {
                 const data = await res.json();
-                
-                // Update User UI
-                if (data.user.name) {
-                    document.getElementById('robloxUsername').textContent = data.user.name;
-                }
-                if (data.user.displayName) {
-                    document.getElementById('robloxDisplayName').textContent = `@${data.user.displayName}`;
-                }
-                
-                if (data.user.avatarUrl) {
-                    const avatarImg = document.getElementById('userAvatar');
-                    avatarImg.src = data.user.avatarUrl;
-                    avatarImg.classList.remove('loading-shimmer');
-                }
-
-                // Update Games Data
-                this.gamesData = data.games || [];
-                this.grandTotalVisits = data.grandTotalVisits || 0;
-                
-                this.updateUI();
+                localStorage.setItem('portfolioData_v1', JSON.stringify(data));
+                this.populateData(data);
             } else {
-                throw new Error("data.json not found");
+                if (!cachedData) throw new Error("data.json not found");
             }
         } catch (error) {
             console.error("Failed to load static data:", error);
-            document.getElementById('gamesGrid').innerHTML = `<p style="color:red; text-align:center;">Error loading live metrics. Please try again later.</p>`;
+            if (!this.gamesData || this.gamesData.length === 0) {
+                document.getElementById('gamesGrid').innerHTML = `<p style="color:red; text-align:center;">Error loading live metrics. Please try again later.</p>`;
+            }
         }
+    }
+
+    populateData(data) {
+        // Update User UI
+        if (data.user.name) {
+            document.getElementById('robloxUsername').textContent = data.user.name;
+        }
+        if (data.user.displayName) {
+            document.getElementById('robloxDisplayName').textContent = `@${data.user.displayName}`;
+        }
+        
+        if (data.user.avatarUrl) {
+            const avatarImg = document.getElementById('userAvatar');
+            if (avatarImg.src !== data.user.avatarUrl) {
+                avatarImg.src = data.user.avatarUrl;
+                avatarImg.classList.remove('loading-shimmer');
+            }
+        }
+
+        // Update Games Data
+        this.gamesData = data.games || [];
+        this.grandTotalVisits = data.grandTotalVisits || 0;
+        
+        this.updateUI();
     }
 
     updateUI() {
