@@ -19,32 +19,21 @@
 }
 
 body {
-    background-color: var(--bg-color);
+    background-color: var(--navy-blue);
     color: var(--white);
     font-family: var(--font-body);
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
-/* Dynamic Backgrounds */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: radial-gradient(circle at 15% 50%, rgba(11, 26, 64, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(217, 28, 41, 0.15) 0%, transparent 50%);
-    z-index: -2;
-    pointer-events: none;
+body::-webkit-scrollbar {
+    display: none;
 }
 
-.background-decor {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.4;
-}
+/* Dynamic Backgrounds Removed */
 
 /* Header & Hero */
 .hero {
@@ -56,14 +45,12 @@ body::before {
     padding: 4rem 2rem;
     position: relative;
     border-bottom: 1px solid var(--glass-border);
-    background: linear-gradient(180deg, rgba(11, 26, 64, 0.8) 0%, transparent 100%);
 }
 
 .hero-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: fadeInDown 1s ease-out;
 }
 
 .profile-avatar-container {
@@ -76,14 +63,7 @@ body::before {
     height: 140px;
     border-radius: 50%;
     border: 3px solid var(--white);
-    box-shadow: 0 0 30px var(--crimson-glow);
     object-fit: cover;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.profile-avatar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 50px var(--crimson-glow);
 }
 
 .verified-badge-hero {
@@ -134,22 +114,11 @@ h1.glitch {
     display: flex;
     align-items: center;
     gap: 1rem;
-    will-change: transform;
-    transform: translateY(0);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.grand-total-container:hover {
-    transform: translateY(-5px);
-    border-color: rgba(217, 28, 41, 0.8);
-    box-shadow: 0 5px 30px var(--crimson-glow);
 }
 
 .icon-ruby {
     color: var(--crimson-red);
     font-size: 2rem;
-    text-shadow: 0 0 10px var(--crimson-red);
-    animation: pulse 2s infinite;
 }
 
 .grand-total-text {
@@ -223,8 +192,6 @@ h1.glitch {
     width: 8px; height: 8px;
     background: #ff4d5a;
     border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(255, 77, 90, 0.7);
-    animation: pulsing 1.5s infinite;
 }
 
 /* Games Grid */
@@ -240,28 +207,8 @@ h1.glitch {
     border: 1px solid var(--glass-border);
     border-radius: 24px;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    will-change: transform, opacity;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                border-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: slideUpFade 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes slideUpFade {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.game-card:hover {
-    transform: translateY(-10px);
-    border-color: rgba(217, 28, 41, 0.5);
-    box-shadow: 0 20px 40px rgba(11, 26, 64, 0.8), 0 0 20px var(--crimson-glow);
+    opacity: 1;
 }
 
 .game-icon-wrapper {
@@ -276,11 +223,6 @@ h1.glitch {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.game-card:hover .game-icon {
-    transform: scale(1.1);
 }
 
 .qa-role-badge {
@@ -445,11 +387,6 @@ footer {
 .footer-sub { font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.6; }
 
 /* Animations */
-@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-@keyframes pulsing { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 90, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 77, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 90, 0); } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
 /* GPU-Accelerated Shimmer Helper */
 .loading-shimmer {
     background: #0f214f;
