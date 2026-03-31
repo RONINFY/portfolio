@@ -20,7 +20,7 @@ window.copyDiscord = function () {
 const ROBLOX_USER_ID = 9296222240; // John America
 const PORTFOLIO_GAMES = [
     { universeId: 9907858048, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' },
-    { universeId: 9552721205, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' },
+    { placeId: 109932080383306, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' },
     { universeId: 9898476119, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during beta test' },
     { universeId: 9715827305, role: 'Beta Tester', description: 'Helped identify functional bugs during beta test.' }
 ];
@@ -32,7 +32,23 @@ const getProxiedUrl = (url) => {
 async function runClientFallback() {
     try {
         console.warn("SSG Pre-rendering not detected. Running Client-Side fallback...");
-        const universeIds = PORTFOLIO_GAMES.map(g => g.universeId).join(',');
+
+        // Resolve any placeIds to universeIds first
+        await Promise.all(PORTFOLIO_GAMES.map(async (g) => {
+            if (g.placeId && !g.universeId) {
+                try {
+                    const uRes = await fetch(getProxiedUrl(`https://apis.roblox.com/universes/v1/places/${g.placeId}/universe`));
+                    if (uRes.ok) {
+                        const uData = await uRes.json();
+                        g.universeId = uData.universeId;
+                    }
+                } catch (e) {
+                    // Ignore fail
+                }
+            }
+        }));
+
+        const universeIds = PORTFOLIO_GAMES.map(g => g.universeId).filter(Boolean).join(',');
 
         // Execute API Fetches
         const [userRes, avatarRes, detailsRes, iconsRes, votesRes] = await Promise.all([
@@ -92,6 +108,11 @@ async function runClientFallback() {
 
         let grandTotalVisits = gamesData.reduce((sum, game) => sum + game.visits, 0);
         document.getElementById('grandTotalVisits').textContent = formatFullNumber(grandTotalVisits);
+
+        const gamesTestedElem = document.getElementById('grandTotalGames');
+        if (gamesTestedElem) {
+            gamesTestedElem.textContent = PORTFOLIO_GAMES.length;
+        }
 
         // Render HTML Cards manually on client
         const grid = document.getElementById('gamesGrid');

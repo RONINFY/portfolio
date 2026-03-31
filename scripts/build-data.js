@@ -5,7 +5,7 @@ const ROBLOX_USER_ID = 9296222240; // John America
 
 const PORTFOLIO_GAMES = [
     { universeId: 9907858048, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' },
-    { universeId: 9552721205, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' },
+    { placeId: 109932080383306, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' },
     { universeId: 9898476119, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during beta test' },
     { universeId: 9715827305, role: 'Beta Tester', description: 'Helped identify functional bugs during beta test.' }
 ];
@@ -36,8 +36,23 @@ async function fetchData() {
             }
         }
 
+        // Resolve any placeIds to universeIds first
+        await Promise.all(PORTFOLIO_GAMES.map(async (g) => {
+            if (g.placeId && !g.universeId) {
+                try {
+                    const uRes = await fetch(`https://apis.roblox.com/universes/v1/places/${g.placeId}/universe`);
+                    if (uRes.ok) {
+                        const uData = await uRes.json();
+                        g.universeId = uData.universeId;
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch universe ID for place", g.placeId);
+                }
+            }
+        }));
+
         // Fetch Games Data
-        const universeIds = PORTFOLIO_GAMES.map(g => g.universeId).join(',');
+        const universeIds = PORTFOLIO_GAMES.map(g => g.universeId).filter(Boolean).join(',');
 
         const [detailsRes, iconsRes, votesRes] = await Promise.all([
             fetch(`https://games.roblox.com/v1/games?universeIds=${universeIds}`),
@@ -79,6 +94,7 @@ async function fetchData() {
         });
 
         result.grandTotalVisits = result.games.reduce((sum, game) => sum + game.visits, 0);
+        result.gamesTested = PORTFOLIO_GAMES.length;
 
         // Sort by visits descending
         result.games.sort((a, b) => b.visits - a.visits);
@@ -181,6 +197,11 @@ async function fetchData() {
         indexHtml = indexHtml.replace(
             /(<!-- SSG:TOTAL_VISITS -->)[\s\S]*?(<!-- \/SSG:TOTAL_VISITS -->)/g,
             `$1\n                    <span id="grandTotalVisits" class="value">${formatFullNumber(result.grandTotalVisits)}</span>\n                    $2`
+        );
+        // Inject Games Tested
+        indexHtml = indexHtml.replace(
+            /(<!-- SSG:TOTAL_GAMES -->)[\s\S]*?(<!-- \/SSG:TOTAL_GAMES -->)/g,
+            `$1\n                        <span id="grandTotalGames" class="value">${result.gamesTested}</span>\n                        $2`
         );
         // Inject Games Grid
         indexHtml = indexHtml.replace(
