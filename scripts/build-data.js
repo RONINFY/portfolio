@@ -5,7 +5,7 @@ const ROBLOX_USER_ID = 9296222240; // John America
 
 const PORTFOLIO_GAMES = [
     { universeId: 9907858048, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' },
-    { universeId: 9092720426, role: 'Alpha Tester', description: 'Evaluated core gameplay loops during alpha test.' },
+    { universeId: 109932080383306, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' },
     { universeId: 9898476119, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during beta test' },
     { universeId: 9715827305, role: 'Beta Tester', description: 'Helped identify functional bugs during beta test.' }
 ];
@@ -38,7 +38,7 @@ async function fetchData() {
 
         // Fetch Games Data
         const universeIds = PORTFOLIO_GAMES.map(g => g.universeId).join(',');
-        
+
         const [detailsRes, iconsRes, votesRes] = await Promise.all([
             fetch(`https://games.roblox.com/v1/games?universeIds=${universeIds}`),
             fetch(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeIds}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false`),
@@ -67,7 +67,7 @@ async function fetchData() {
             const iconObj = iconsData.data.find(icon => icon.targetId === game.id);
             const voteObj = votesData.data.find(vote => vote.id === game.id);
             const config = PORTFOLIO_GAMES.find(g => g.universeId === game.id) || {};
-            
+
             return {
                 ...game,
                 iconUrl: iconObj ? iconObj.imageUrl : '',
@@ -83,41 +83,41 @@ async function fetchData() {
         // Sort by visits descending
         result.games.sort((a, b) => b.visits - a.visits);
 
-const formatNumber = (num) => {
-    if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B+';
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
-    return num.toLocaleString();
-};
+        const formatNumber = (num) => {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B+';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
+            return num.toLocaleString();
+        };
 
-const formatFullNumber = (num) => {
-    return num.toLocaleString();
-};
+        const formatFullNumber = (num) => {
+            return num.toLocaleString();
+        };
 
-const buildGamesHtml = (gamesData) => {
-    let result = '';
-    gamesData.forEach((game) => {
-        let creatorHtml = '';
-        if (game.creator.type === 'Group') {
-            const groupVerified = ((game.groupDetails && game.groupDetails.hasVerifiedBadge) || game.creator.hasVerifiedBadge)
-                ? '<i class="fas fa-check-circle verified-icon" title="Verified Group"></i>' : '';
-            let ownerHtml = '';
-            if (game.groupDetails && game.groupDetails.owner) {
-                const ownerVerified = game.groupDetails.owner.hasVerifiedBadge
-                    ? '<i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>' : '';
-                ownerHtml = `<div class="creator-sub">By: ${game.groupDetails.owner.username} ${ownerVerified}</div>`;
-            }
-            creatorHtml = `<div class="creator-tag"><i class="fas fa-users"></i> ${game.creator.name} ${groupVerified}${ownerHtml}</div>`;
-        } else {
-            const verifiedTag = game.creator.hasVerifiedBadge
-                ? '<i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>' : '';
-            creatorHtml = `<div class="creator-tag"><i class="fas fa-user"></i> ${game.creator.name} ${verifiedTag}</div>`;
-        }
+        const buildGamesHtml = (gamesData) => {
+            let result = '';
+            gamesData.forEach((game) => {
+                let creatorHtml = '';
+                if (game.creator.type === 'Group') {
+                    const groupVerified = ((game.groupDetails && game.groupDetails.hasVerifiedBadge) || game.creator.hasVerifiedBadge)
+                        ? '<i class="fas fa-check-circle verified-icon" title="Verified Group"></i>' : '';
+                    let ownerHtml = '';
+                    if (game.groupDetails && game.groupDetails.owner) {
+                        const ownerVerified = game.groupDetails.owner.hasVerifiedBadge
+                            ? '<i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>' : '';
+                        ownerHtml = `<div class="creator-sub">By: ${game.groupDetails.owner.username} ${ownerVerified}</div>`;
+                    }
+                    creatorHtml = `<div class="creator-tag"><i class="fas fa-users"></i> ${game.creator.name} ${groupVerified}${ownerHtml}</div>`;
+                } else {
+                    const verifiedTag = game.creator.hasVerifiedBadge
+                        ? '<i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>' : '';
+                    creatorHtml = `<div class="creator-tag"><i class="fas fa-user"></i> ${game.creator.name} ${verifiedTag}</div>`;
+                }
 
-        const descriptionHtml = game.description ? `<div class="contribution-desc">${game.description}</div>` : '';
+                const descriptionHtml = game.description ? `<div class="contribution-desc">${game.description}</div>` : '';
 
-        // Inject games natively with no animation delays because the DOM should instantly paint
-        result += `
+                // Inject games natively with no animation delays because the DOM should instantly paint
+                result += `
             <div class="game-card" onclick="window.open('https://www.roblox.com/games/${game.rootPlaceId}', '_blank')" style="cursor: pointer; opacity: 1; transform: translateY(0); animation: none;">
                 <div class="game-icon-wrapper">
                     <img src="${game.iconUrl}" alt="${game.name} Icon" class="game-icon" loading="lazy">
@@ -149,15 +149,15 @@ const buildGamesHtml = (gamesData) => {
                 </div>
             </div>
         `;
-    });
-    return result;
-};
+            });
+            return result;
+        };
 
-// ... inside fetchData where data mapping completes
+        // ... inside fetchData where data mapping completes
         // Write to data.json (keep as backup)
         const jsonOutputPath = path.join(__dirname, '..', 'data.json');
         fs.writeFileSync(jsonOutputPath, JSON.stringify(result, null, 2));
-        
+
         // Inject into index.html for TRUE Static generation
         const indexPath = path.join(__dirname, '..', 'index.html');
         let indexHtml = fs.readFileSync(indexPath, 'utf8');
