@@ -19,11 +19,11 @@ window.copyDiscord = function () {
 // Fallback execution
 const ROBLOX_USER_ID = 9296222240; // John America
 const PORTFOLIO_GAMES = [
-    { placeId: 136577413998809, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
-    { placeId: 109932080383306, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
-    { placeId: 124910815181368, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
-    { placeId: 94702395375549, role: 'Trade Update Tester', description: 'Tested and helped find bugs pertaining to the trading system' },
-    { placeId: 109021167563361, role: 'Tester', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
+    { placeId: 136577413998809, role: 'Beta Tester (commissioned)', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
+    { placeId: 109932080383306, role: 'Tester (commissioned)', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
+    { placeId: 124910815181368, role: 'Beta Tester(commissioned)', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
+    { placeId: 94702395375549, role: 'Trade Update Tester (commissioned)', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
+    { placeId: 109021167563361, role: 'Tester (commissioned)', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
 ];
 
 const getProxiedUrl = (url) => {
