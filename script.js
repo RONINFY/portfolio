@@ -24,7 +24,7 @@ const PORTFOLIO_GAMES = [
     { placeId: 124910815181368, role: 'Beta Tester(commissioned)', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
     { placeId: 94702395375549, role: 'Trade Update Tester (commissioned)', category: 'commissioned', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
     { placeId: 109021167563361, role: 'Tester (commissioned)', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' }, //Build a tree factory
-    { isNDA: true, role: 'tester', category: 'formal', description: 'tester for a unannounced project.' }
+    { isNDA: true, role: 'Full-time Staff (NDA)', category: 'formal', description: 'Dedicated QA lead for a high-priority, unannounced project.' }
 ];
 
 const getProxiedUrl = (url) => {
