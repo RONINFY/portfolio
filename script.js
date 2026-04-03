@@ -186,20 +186,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Filter function for Role cards
-window.filterGames = function(category) {
+window.filterGames = function (category) {
     const cards = document.querySelectorAll('.game-card');
     const triggerBtn = document.querySelector(`.role-card[onclick*="${category}"]`);
-    
+    const title = document.getElementById('portfolioTitle');
+
     // Toggle OFF
     if (triggerBtn && triggerBtn.classList.contains('active-filter')) {
         document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-filter'));
         cards.forEach(card => card.style.display = 'block');
+        if (title) title.textContent = 'Overall QA Portfolio';
         return;
     }
 
     // Toggle ON
     document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-filter'));
     if (triggerBtn) triggerBtn.classList.add('active-filter');
+
+    if (title) {
+        title.textContent = category === 'commissioned' ? 'QA Commissions' : 'QA Staff Roles';
+    }
 
     cards.forEach(card => {
         if (card.getAttribute('data-category') === category) {
