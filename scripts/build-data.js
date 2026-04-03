@@ -8,7 +8,8 @@ const PORTFOLIO_GAMES = [
     { placeId: 109932080383306, role: 'Tester', category: 'commissioned', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
     { placeId: 124910815181368, role: 'Beta Tester', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
     { placeId: 94702395375549, role: 'Trade Update Tester', category: 'commissioned', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
-    { placeId: 109021167563361, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
+    { placeId: 109021167563361, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' }, //Build a tree factory
+    { isNDA: true, role: 'Full-time Staff (NDA)', category: 'formal', description: 'Dedicated QA lead for a high-priority, unannounced project.' }
 ];
 
 async function fetchData() {
@@ -90,10 +91,20 @@ async function fetchData() {
                 likes: voteObj ? voteObj.upVotes : 0,
                 role: config.role || 'QA',
                 category: config.category || 'commissioned',
+                isNDA: config.isNDA || false,
                 description: config.description || '',
                 groupDetails: groupDetailsMap[game.id] || null
             };
-        });
+        }).concat(PORTFOLIO_GAMES.filter(g => g.isNDA).map(g => ({
+            name: "[CLASSIFIED] Unannounced Project",
+            creator: { name: "[REDACTED]" },
+            isNDA: true,
+            role: g.role,
+            category: g.category,
+            description: g.description,
+            visits: 0, playing: 0, likes: 0, favoritedCount: 0,
+            iconUrl: 'https://img.icons8.com/ios-filled/200/ffffff/lock.png'
+        })));
 
         result.grandTotalVisits = result.games.reduce((sum, game) => sum + game.visits, 0);
         result.gamesTested = PORTFOLIO_GAMES.length;
@@ -135,8 +146,11 @@ async function fetchData() {
                 const descriptionHtml = game.description ? `<div class="contribution-desc">${game.description}</div>` : '';
 
                 // Inject games natively with no animation delays because the DOM should instantly paint
+                const onclickAttr = game.isNDA ? '' : `onclick="window.open('https://www.roblox.com/games/${game.rootPlaceId}', '_blank')"`;
+                const styleAttr = game.isNDA ? 'opacity: 1; transform: translateY(0); animation: none;' : 'cursor: pointer; opacity: 1; transform: translateY(0); animation: none;';
+                
                 result += `
-            <div class="game-card" data-category="${game.category}" onclick="window.open('https://www.roblox.com/games/${game.rootPlaceId}', '_blank')" style="cursor: pointer; opacity: 1; transform: translateY(0); animation: none;">
+            <div class="game-card${game.isNDA ? ' nda' : ''}" data-category="${game.category}" ${onclickAttr} style="${styleAttr}">
                 <div class="game-icon-wrapper">
                     <img src="${game.iconUrl}" alt="${game.name} Icon" class="game-icon" loading="lazy">
                     <div class="qa-role-badge"><i class="fas fa-hammer"></i> ${game.role}</div>
@@ -149,19 +163,19 @@ async function fetchData() {
                     <div class="metrics-grid">
                         <div class="metric">
                             <span class="metric-label"><i class="fas fa-globe-americas" style="color:var(--crimson-red)"></i> Visits</span>
-                            <span class="metric-value">${formatNumber(game.visits)}</span>
+                            <span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.visits)}</span>
                         </div>
                         <div class="metric">
                             <span class="metric-label"><i class="fas fa-users" style="color:#1d9bf0"></i> Playing</span>
-                            <span class="metric-value">${formatNumber(game.playing)}</span>
+                            <span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.playing)}</span>
                         </div>
                         <div class="metric">
                             <span class="metric-label"><i class="fas fa-thumbs-up" style="color:#00b894"></i> Likes</span>
-                            <span class="metric-value">${formatNumber(game.likes)}</span>
+                            <span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.likes)}</span>
                         </div>
                         <div class="metric">
                             <span class="metric-label"><i class="fas fa-star" style="color:#fdcb6e"></i> Favorites</span>
-                            <span class="metric-value">${formatNumber(game.favoritedCount)}</span>
+                            <span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.favoritedCount)}</span>
                         </div>
                     </div>
                 </div>

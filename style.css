@@ -320,6 +320,41 @@ h1.glitch {
     line-height: 1.5;
 }
 
+/* NDA Card Styling */
+.game-card.nda {
+    cursor: default !important;
+    filter: saturate(0.8) contrast(1.1);
+    border-color: rgba(255, 215, 0, 0.2); /* Gold-ish tint for classified */
+    background: linear-gradient(145deg, rgba(11, 26, 64, 0.6), rgba(5, 10, 21, 0.8));
+}
+
+.game-card.nda:hover {
+    transform: none;
+    border-color: rgba(255, 215, 0, 0.4);
+}
+
+.game-card.nda .game-title {
+    color: #e2e8f0;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.game-card.nda .qa-role-badge {
+    border-color: #ffd700;
+    color: #ffd700;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.game-card.nda .metric-value {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.game-card.nda .creator-tag {
+    opacity: 0.6;
+}
+
 /* Roles Section */
 .roles-grid {
     display: grid;
