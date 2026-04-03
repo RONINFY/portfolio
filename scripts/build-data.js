@@ -9,7 +9,7 @@ const PORTFOLIO_GAMES = [
     { placeId: 124910815181368, role: 'Beta Tester', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
     { placeId: 94702395375549, role: 'Trade Update Tester', category: 'commissioned', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
     { placeId: 109021167563361, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' }, //Build a tree factory
-    { isNDA: true, role: 'Full-time Staff (NDA)', category: 'formal', description: 'Dedicated QA lead for a high-priority, unannounced project.' }
+    { isNDA: true, role: 'tester', category: 'formal', description: 'tester for a unannounced project.' }
 ];
 
 async function fetchData() {
@@ -148,7 +148,7 @@ async function fetchData() {
                 // Inject games natively with no animation delays because the DOM should instantly paint
                 const onclickAttr = game.isNDA ? '' : `onclick="window.open('https://www.roblox.com/games/${game.rootPlaceId}', '_blank')"`;
                 const styleAttr = game.isNDA ? 'opacity: 1; transform: translateY(0); animation: none;' : 'cursor: pointer; opacity: 1; transform: translateY(0); animation: none;';
-                
+
                 result += `
             <div class="game-card${game.isNDA ? ' nda' : ''}" data-category="${game.category}" ${onclickAttr} style="${styleAttr}">
                 <div class="game-icon-wrapper">

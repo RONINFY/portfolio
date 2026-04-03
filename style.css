@@ -443,6 +443,17 @@ body::-webkit-scrollbar {
     background: rgba(255,255,255,0.1);
     display: flex; justify-content: center; align-items: center;
     font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.card-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.roblox .card-icon img {
+    filter: invert(1);
 }
 
 .discord .card-icon { color: #5865F2; }
