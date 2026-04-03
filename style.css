@@ -83,9 +83,9 @@ body::-webkit-scrollbar {
     vertical-align: text-bottom;
 }
 
-h1.glitch {
+.hero-name {
     font-family: var(--font-heading);
-    font-size: 4rem;
+    font-size: 4.2rem;
     font-weight: 800;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
@@ -173,26 +173,7 @@ h1.glitch {
     max-width: 800px;
 }
 
-/* Live Indicator */
-.live-indicator {
-    font-size: 0.9rem;
-    background: rgba(217, 28, 41, 0.15);
-    border: 1px solid var(--crimson-red);
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    color: #ff4d5a;
-    font-family: var(--font-body);
-}
-
-.pulse {
-    width: 8px; height: 8px;
-    background: #ff4d5a;
-    border-radius: 50%;
-}
+/* Games Grid */
 
 /* Games Grid */
 .games-grid {
@@ -318,6 +299,41 @@ h1.glitch {
     border-left: 3px solid var(--crimson-red);
     border-radius: 0 6px 6px 0;
     line-height: 1.5;
+}
+
+/* NDA Card Styling */
+.game-card.nda {
+    cursor: default !important;
+    filter: saturate(0.8) contrast(1.1);
+    border-color: rgba(255, 215, 0, 0.2); /* Gold-ish tint for classified */
+    background: linear-gradient(145deg, rgba(11, 26, 64, 0.6), rgba(5, 10, 21, 0.8));
+}
+
+.game-card.nda:hover {
+    transform: none;
+    border-color: rgba(255, 215, 0, 0.4);
+}
+
+.game-card.nda .game-title {
+    color: #e2e8f0;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.game-card.nda .qa-role-badge {
+    border-color: #ffd700;
+    color: #ffd700;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.game-card.nda .metric-value {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.game-card.nda .creator-tag {
+    opacity: 0.6;
 }
 
 /* Roles Section */
@@ -457,27 +473,8 @@ footer {
 }
 .footer-sub { font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.6; }
 
-/* Animations */
-/* GPU-Accelerated Shimmer Helper */
-.loading-shimmer {
-    background: #0f214f;
-    position: relative;
-    overflow: hidden;
-}
-.loading-shimmer::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent 0%, rgba(22, 42, 92, 0.8) 50%, transparent 100%);
-    animation: shimmer 1.5s infinite linear;
-}
-@keyframes shimmer {
-    100% { transform: translateX(100%); }
-}
-
 @media (max-width: 768px) {
-    h1.glitch { font-size: 2.5rem; }
+    .hero-name { font-size: 2.5rem; }
     .grand-total-container { flex-direction: column; text-align: center; padding: 1rem; }
     .grand-total-text { text-align: center; }
 }
