@@ -281,6 +281,8 @@ body::-webkit-scrollbar {
     padding: 0.5rem 0.8rem;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.05);
+    min-height: 4.5rem;
+    align-content: center;
 }
 
 .creator-sub {
@@ -306,6 +308,7 @@ body::-webkit-scrollbar {
     border-left: 3px solid var(--crimson-red);
     border-radius: 0 6px 6px 0;
     line-height: 1.5;
+    flex-grow: 1;
 }
 
 /* NDA Card Styling */
