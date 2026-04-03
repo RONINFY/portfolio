@@ -19,11 +19,11 @@ window.copyDiscord = function () {
 // Fallback execution
 const ROBLOX_USER_ID = 9296222240; // John America
 const PORTFOLIO_GAMES = [
-    { placeId: 136577413998809, role: 'Beta Tester (commissioned)', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
-    { placeId: 109932080383306, role: 'Tester (commissioned)', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
-    { placeId: 124910815181368, role: 'Beta Tester(commissioned)', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
-    { placeId: 94702395375549, role: 'Trade Update Tester (commissioned)', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
-    { placeId: 109021167563361, role: 'Tester (commissioned)', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
+    { placeId: 136577413998809, role: 'Beta Tester (commissioned)', category: 'commissioned', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
+    { placeId: 109932080383306, role: 'Tester (commissioned)', category: 'commissioned', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
+    { placeId: 124910815181368, role: 'Beta Tester(commissioned)', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
+    { placeId: 94702395375549, role: 'Trade Update Tester (commissioned)', category: 'commissioned', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
+    { placeId: 109021167563361, role: 'Tester (commissioned)', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
 ];
 
 const getProxiedUrl = (url) => {
@@ -99,6 +99,7 @@ async function runClientFallback() {
                 iconUrl: iconObj ? iconObj.imageUrl : '',
                 likes: voteObj ? voteObj.upVotes : 0,
                 role: config.role || 'QA',
+                category: config.category || 'commissioned',
                 description: config.description || '',
                 groupDetails: groupDetailsMap[game.id] || null
             };
@@ -122,6 +123,7 @@ async function runClientFallback() {
         gamesData.forEach((game, index) => {
             const card = document.createElement('div');
             card.className = 'game-card';
+            card.setAttribute('data-category', game.category);
             card.onclick = () => window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
             card.style.cursor = 'pointer';
 
@@ -182,3 +184,28 @@ document.addEventListener('DOMContentLoaded', () => {
         runClientFallback();
     }
 });
+
+// Filter function for Role cards
+window.filterGames = function(category) {
+    const cards = document.querySelectorAll('.game-card');
+    const triggerBtn = document.querySelector(`.role-card[onclick*="${category}"]`);
+    
+    // Toggle OFF
+    if (triggerBtn && triggerBtn.classList.contains('active-filter')) {
+        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-filter'));
+        cards.forEach(card => card.style.display = 'block');
+        return;
+    }
+
+    // Toggle ON
+    document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-filter'));
+    if (triggerBtn) triggerBtn.classList.add('active-filter');
+
+    cards.forEach(card => {
+        if (card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+};

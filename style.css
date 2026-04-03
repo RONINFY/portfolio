@@ -320,6 +320,71 @@ h1.glitch {
     line-height: 1.5;
 }
 
+/* Roles Section */
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.role-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    color: var(--white);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.role-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.role-card.clickable-role {
+    cursor: pointer;
+}
+
+.role-card.active-filter {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+}
+
+.role-icon {
+    width: 60px; height: 60px;
+    border-radius: 12px;
+    background: rgba(217, 28, 41, 0.1);
+    border: 1px solid rgba(217, 28, 41, 0.3);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.8rem;
+    color: var(--crimson-red);
+    flex-shrink: 0;
+}
+
+.role-card:nth-child(2) .role-icon {
+    background: rgba(29, 155, 240, 0.1);
+    border-color: rgba(29, 155, 240, 0.3);
+    color: #1d9bf0;
+}
+
+.role-info h3 {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.role-info p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
 /* Contact Section */
 .contact-cards {
     display: grid;
@@ -351,6 +416,11 @@ h1.glitch {
     background: rgba(88, 101, 242, 0.1);
 }
 
+.contact-card.email:hover {
+    border-color: #ea4335;
+    background: rgba(234, 67, 53, 0.1);
+}
+
 .card-icon {
     width: 60px; height: 60px;
     border-radius: 12px;
@@ -360,6 +430,7 @@ h1.glitch {
 }
 
 .discord .card-icon { color: #5865F2; }
+.email .card-icon { color: #ea4335; }
 
 .card-info h3 { font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-muted); margin-bottom: 0.2rem; }
 .card-info p { font-size: 1.4rem; font-weight: 700; }

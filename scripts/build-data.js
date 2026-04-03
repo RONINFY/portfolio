@@ -4,11 +4,11 @@ const path = require('path');
 const ROBLOX_USER_ID = 9296222240; // John America
 
 const PORTFOLIO_GAMES = [
-    { placeId: 136577413998809, role: 'Beta Tester', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
-    { placeId: 109932080383306, role: 'Tester', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
-    { placeId: 124910815181368, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
-    // { placeId: 91774484861138, role: 'Beta Tester', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' },
-    { placeId: 109021167563361, role: 'Tester', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
+    { placeId: 136577413998809, role: 'Beta Tester', category: 'commissioned', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
+    { placeId: 109932080383306, role: 'Tester', category: 'commissioned', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
+    { placeId: 124910815181368, role: 'Beta Tester', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
+    // { placeId: 91774484861138, role: 'Beta Tester', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' },
+    { placeId: 109021167563361, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' } //Build a tree factory
 ];
 
 async function fetchData() {
@@ -89,6 +89,7 @@ async function fetchData() {
                 iconUrl: iconObj ? iconObj.imageUrl : '',
                 likes: voteObj ? voteObj.upVotes : 0,
                 role: config.role || 'QA',
+                category: config.category || 'commissioned',
                 description: config.description || '',
                 groupDetails: groupDetailsMap[game.id] || null
             };
@@ -135,7 +136,7 @@ async function fetchData() {
 
                 // Inject games natively with no animation delays because the DOM should instantly paint
                 result += `
-            <div class="game-card" onclick="window.open('https://www.roblox.com/games/${game.rootPlaceId}', '_blank')" style="cursor: pointer; opacity: 1; transform: translateY(0); animation: none;">
+            <div class="game-card" data-category="${game.category}" onclick="window.open('https://www.roblox.com/games/${game.rootPlaceId}', '_blank')" style="cursor: pointer; opacity: 1; transform: translateY(0); animation: none;">
                 <div class="game-icon-wrapper">
                     <img src="${game.iconUrl}" alt="${game.name} Icon" class="game-icon" loading="lazy">
                     <div class="qa-role-badge"><i class="fas fa-hammer"></i> ${game.role}</div>
