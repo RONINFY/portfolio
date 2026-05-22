@@ -499,3 +499,98 @@ footer {
     .grand-total-container { flex-direction: column; text-align: center; padding: 1rem; }
     .grand-total-text { text-align: center; }
 }
+
+/* ============================
+   Maintenance Mode Overlay
+   ============================ */
+#maintenanceOverlay {
+    display: none; /* shown by JS when MAINTENANCE_MODE = 1 */
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: radial-gradient(ellipse at center, #0b1a40 0%, #050a15 70%);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.maintenance-card {
+    text-align: center;
+    padding: 3.5rem 4rem;
+    max-width: 520px;
+    width: 90%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 60px rgba(217, 28, 41, 0.12), 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.maintenance-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: rgba(217, 28, 41, 0.1);
+    border: 2px solid rgba(217, 28, 41, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--crimson-red);
+    animation: maintenance-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes maintenance-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217, 28, 41, 0.4); }
+    50%       { box-shadow: 0 0 0 14px rgba(217, 28, 41, 0); }
+}
+
+.maintenance-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.maintenance-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.maintenance-contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+}
+
+.maintenance-contact a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: color 0.2s;
+}
+
+.maintenance-contact a:hover {
+    color: var(--crimson-red);
+}
+
+.maintenance-contact strong {
+    color: var(--white);
+    font-weight: 700;
+}

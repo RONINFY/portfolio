@@ -1,3 +1,16 @@
+// ============================================================
+//  MAINTENANCE MODE  —  set to 1 to show the maintenance page
+//                        set to 0 to show the normal site
+// ============================================================
+const MAINTENANCE_MODE = 0;
+
+if (MAINTENANCE_MODE) {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('maintenanceOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+}
+
 // Formatting helpers
 const formatNumber = (num) => {
     if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B+';
@@ -191,9 +204,11 @@ async function runClientFallback() {
 document.addEventListener('DOMContentLoaded', () => {
     // If the HTML explicitly says 'Loading...', it means GitHub Actions failed to natively pre-render the data 
     // (or you're developing locally). We fall back to old client-side fetching as a bulletproof safety net!
-    const testVisits = document.getElementById('grandTotalVisits');
-    if (testVisits && testVisits.textContent.includes('Loading')) {
-        runClientFallback();
+    if (!MAINTENANCE_MODE) {
+        const testVisits = document.getElementById('grandTotalVisits');
+        if (testVisits && testVisits.textContent.includes('Loading')) {
+            runClientFallback();
+        }
     }
 });
 
