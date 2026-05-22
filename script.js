@@ -105,7 +105,7 @@ async function runClientFallback() {
                 groupDetails: groupDetailsMap[game.id] || null
             };
         }).concat(PORTFOLIO_GAMES.filter(g => g.isNDA).map(g => ({
-            name: "[CLASSIFIED] Unannounced Project",
+            name: "Unannounced",
             creator: { name: "[REDACTED]" },
             isNDA: true,
             role: g.role,

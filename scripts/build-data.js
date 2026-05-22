@@ -9,6 +9,12 @@ const PORTFOLIO_GAMES = [
     { placeId: 124910815181368, role: 'Beta Tester', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
     { placeId: 94702395375549, role: 'Trade Update Tester', category: 'commissioned', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
     { placeId: 109021167563361, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' }, //Build a tree factory
+    { placeId: 71350675430720, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' },
+    { placeId: 118554850501976, role: 'Tester', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' },
+    { placeId: 115872975504419, role: 'INDEV Tester', category: 'commissioned', description: 'Helped identify functional bugs during early development.' },
+    { placeId: 93998278396472, role: 'INDEV Tester', category: 'commissioned', description: 'contributed during early development.' },
+    { placeId: 74621494127688, role: 'INDEV Tester', category: 'commissioned', description: 'contributed during early development.' },
+
     { isNDA: true, role: 'tester', category: 'formal', description: 'tester for a unannounced project.' }
 ];
 
@@ -96,8 +102,8 @@ async function fetchData() {
                 groupDetails: groupDetailsMap[game.id] || null
             };
         }).concat(PORTFOLIO_GAMES.filter(g => g.isNDA).map(g => ({
-            name: "[CLASSIFIED] Unannounced Project",
-            creator: { name: "[REDACTED]" },
+            name: "Unannounced",
+            creator: { name: "Unannounced" },
             isNDA: true,
             role: g.role,
             category: g.category,
