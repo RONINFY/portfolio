@@ -508,7 +508,10 @@ footer {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: radial-gradient(ellipse at center, #0b1a40 0%, #050a15 70%);
+    background-image: url('maintenance-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -523,27 +526,7 @@ footer {
     border: 1px solid var(--glass-border);
     border-radius: 28px;
     backdrop-filter: blur(20px);
-    box-shadow: 0 0 60px rgba(217, 28, 41, 0.12), 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.maintenance-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1.5rem;
-    border-radius: 50%;
-    background: rgba(217, 28, 41, 0.1);
-    border: 2px solid rgba(217, 28, 41, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: var(--crimson-red);
-    animation: maintenance-pulse 2.5s ease-in-out infinite;
-}
-
-@keyframes maintenance-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(217, 28, 41, 0.4); }
-    50%       { box-shadow: 0 0 0 14px rgba(217, 28, 41, 0); }
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
 }
 
 .maintenance-title {
