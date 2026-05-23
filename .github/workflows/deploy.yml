@@ -1,6 +1,9 @@
 name: Deploy Static Web App
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
   schedule:
     - cron: '0 * * * *'
