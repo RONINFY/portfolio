@@ -2,7 +2,7 @@
 //  MAINTENANCE MODE  —  set to 1 to show the maintenance page
 //                        set to 0 to show the normal site
 // ============================================================
-const MAINTENANCE_MODE = 1;
+const MAINTENANCE_MODE = 0;
 
 if (MAINTENANCE_MODE) {
     document.addEventListener('DOMContentLoaded', () => {
