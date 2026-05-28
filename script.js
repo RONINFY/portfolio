@@ -40,6 +40,7 @@ const PORTFOLIO_GAMES = [
     { isNDA: true, role: 'Full-time Staff (NDA)', category: 'formal', description: 'Dedicated QA lead for a high-priority, unannounced project.' }
 ];
 
+
 const getProxiedUrl = (url) => {
     return `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
 };
