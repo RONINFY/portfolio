@@ -14,12 +14,17 @@
     <meta property="og:title" content="John America • Premier Roblox QA">
     <meta property="og:description"
         content="Explore my professional Quality Assurance contributions and live metrics across the Roblox platform.">
+    <!-- SSG:OG_IMAGE -->
+    <!-- og:image / twitter:image are injected at build time from the Roblox avatar -->
+<!-- /SSG:OG_IMAGE -->
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="John America • Premier Roblox QA">
     <meta name="twitter:description"
         content="Explore my professional Quality Assurance contributions and live metrics across the Roblox platform.">
     <meta name="theme-color" content="#050a15">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d91c29'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='27' font-weight='800' fill='white' text-anchor='middle'%3EJA%3C/text%3E%3C/svg%3E">
 
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +40,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </noscript>
 
-    <!-- Defer main script execution until document paints -->
+    <!-- Shared card renderer (also used by the build script), then the site logic -->
+    <script src="render.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 
@@ -45,14 +51,14 @@
         <div class="maintenance-card">
             <h1 class="maintenance-title">Under Maintenance</h1>
             <p class="maintenance-desc">
-                My Portfolio is down because its updating... Im a chill guy... (also fuck urself deadblade)
+                The portfolio is temporarily offline while it receives an update. It will be back shortly.
             </p>
+            <div class="maintenance-contact">
+                <span>Need to reach me in the meantime?</span>
+                <a href="mailto:johnamericaqa@gmail.com"><i class="fas fa-envelope"></i> johnamericaqa@gmail.com</a>
+            </div>
         </div>
     </div>
-
-    <!-- Background Elements -->
-    <div class="background-decor stars"></div>
-    <div class="background-decor stripes"></div>
 
     <!-- Header / Hero section -->
     <header class="hero">
@@ -61,28 +67,28 @@
                 <!-- SSG:AVATAR -->
                 <img id="userAvatar"
                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                    alt="John America Avatar" class="profile-avatar">
-                <!-- /SSG:AVATAR -->
+                    alt="John America's Roblox avatar" class="profile-avatar">
+<!-- /SSG:AVATAR -->
             </div>
             <h1 class="hero-name">JOHN AMERICA</h1>
             <p class="subtitle">Roblox Quality Assurance</p>
-            <div class="hero-stats" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+            <div class="hero-stats">
                 <div class="grand-total-container">
                     <i class="fas fa-globe-americas icon-ruby"></i>
                     <div class="grand-total-text">
                         <span class="label">Total Visits Contributed To</span>
                         <!-- SSG:TOTAL_VISITS -->
                         <span id="grandTotalVisits" class="value">Loading...</span>
-                        <!-- /SSG:TOTAL_VISITS -->
+<!-- /SSG:TOTAL_VISITS -->
                     </div>
                 </div>
                 <div class="grand-total-container">
-                    <i class="fas fa-hammer icon-ruby" style="color: #1d9bf0; text-shadow: 0 0 10px #1d9bf0;"></i>
+                    <i class="fas fa-hammer icon-sapphire"></i>
                     <div class="grand-total-text">
                         <span class="label">Games Tested</span>
                         <!-- SSG:TOTAL_GAMES -->
                         <span id="grandTotalGames" class="value">Loading...</span>
-                        <!-- /SSG:TOTAL_GAMES -->
+<!-- /SSG:TOTAL_GAMES -->
                     </div>
                 </div>
             </div>
@@ -91,29 +97,32 @@
 
     <main class="container">
         <!-- Role Distinctions Section -->
-        <section class="section roles-section" style="margin-bottom: 4rem;">
+        <section class="section roles-section">
             <h2 class="section-title">My Portfolio</h2>
-            <p class="section-desc">My QA portfolio is divided into two main categories, ranging from commissioned
-                testing engagements to QA staff positions in specific games. CLICK TO SEE WHICH GAMES I WORKED
-                ON IN EACH CATEGORY</p>
+            <p class="section-desc">My QA work falls into two categories, ranging from commissioned testing
+                engagements to staff positions on specific games.
+                <span class="filter-hint"><i class="fas fa-filter"></i> Click a category to filter the games
+                    below.</span>
+            </p>
 
             <div class="roles-grid">
-                <div class="role-card clickable-role" onclick="window.filterGames('commissioned')" tabindex="0"
-                    role="button">
+                <div class="role-card clickable-role" data-filter="commissioned" tabindex="0" role="button"
+                    aria-pressed="false">
                     <div class="role-icon"><i class="fas fa-file-contract"></i></div>
                     <div class="role-info">
                         <h3>Commissioned Tests</h3>
-                        <p>Short-term or scope-based testing where I am brought on for a specific feature, update, or
-                            early development phase. My focus is to identify bugs and give feedback to improve the
-                            update / game, these tests are usually one time, lasting around 3-4 hours.</p>
+                        <p>Short-term or scope-based testing where I'm brought on for a specific feature, update, or
+                            early development phase. My focus is identifying bugs and giving feedback to improve the
+                            update — these sessions are usually one-time, lasting around 3–4 hours.</p>
                     </div>
                 </div>
-                <div class="role-card clickable-role" onclick="window.filterGames('formal')" tabindex="0" role="button">
+                <div class="role-card clickable-role" data-filter="formal" tabindex="0" role="button"
+                    aria-pressed="false">
                     <div class="role-icon"><i class="fas fa-user-shield"></i></div>
                     <div class="role-info">
                         <h3>Staff Positions</h3>
-                        <p>Long-term, team roles where I actively participate in the ongoing development. This
-                            involves repeat testing and reporting directly to developers.</p>
+                        <p>Long-term team roles where I actively participate in ongoing development, with repeat
+                            testing and reporting directly to developers.</p>
                     </div>
                 </div>
             </div>
@@ -124,13 +133,13 @@
             <h2 class="section-title">
                 <span id="portfolioTitle">Overall QA Portfolio</span>
             </h2>
-            <p class="section-desc">Real-time statistics updated on page load to showcase the projects I
+            <p class="section-desc">Statistics refreshed automatically from the Roblox API for the projects I
                 contributed to.</p>
 
             <div id="gamesGrid" class="games-grid">
                 <!-- SSG:GAMES_GRID -->
-                <!-- Game cards will be dynamically injected here... -->
-                <!-- /SSG:GAMES_GRID -->
+                <!-- Game cards are pre-rendered here at build time -->
+<!-- /SSG:GAMES_GRID -->
             </div>
         </section>
 
@@ -147,10 +156,10 @@
                         <h3>Roblox Profile</h3>
                         <!-- SSG:USERNAME -->
                         <p id="robloxUsername">Loading username...</p>
-                        <!-- /SSG:USERNAME -->
+<!-- /SSG:USERNAME -->
                         <!-- SSG:DISPLAY_NAME -->
-                        <span id="robloxDisplayName" class="sub-handle">@JohhAmerica</span>
-                        <!-- /SSG:DISPLAY_NAME -->
+                        <span id="robloxDisplayName" class="sub-handle">@JxhnAmerica</span>
+<!-- /SSG:DISPLAY_NAME -->
                     </div>
                     <i class="fas fa-external-link-alt external-icon"></i>
                 </a>
@@ -162,8 +171,8 @@
                         <p>jxhnamerica</p>
                         <span class="sub-handle">Developer Network</span>
                     </div>
-                    <button class="copy-btn" onclick="copyDiscord()" title="Copy Discord ID"
-                        aria-label="Copy Discord Identity"><i class="fas fa-copy" aria-hidden="true"></i></button>
+                    <button id="copyDiscordBtn" class="copy-btn" title="Copy Discord handle"
+                        aria-label="Copy Discord handle"><i class="fas fa-copy" aria-hidden="true"></i></button>
                 </div>
 
                 <a href="mailto:johnamericaqa@gmail.com" class="contact-card email" aria-label="Email John America">
@@ -172,8 +181,8 @@
                             alt="Gmail"></div>
                     <div class="card-info">
                         <h3>Gmail</h3>
-                        <p style="word-break: break-all;">johnamericaqa</p>
-                        <span class="sub-handle">Inquiries, and NDAs, and testing offers</span>
+                        <p class="email-address">johnamericaqa@gmail.com</p>
+                        <span class="sub-handle">Inquiries, NDAs, and testing offers</span>
                     </div>
                     <i class="fas fa-external-link-alt external-icon"></i>
                 </a>
@@ -183,7 +192,7 @@
 
     <footer>
         <p>&copy; 2026 J.A Industries</p>
-        <p class="footer-sub">Stats dynamically fetched from Roblox Open Cloud</p>
+        <p class="footer-sub">Stats dynamically fetched from the Roblox API</p>
     </footer>
 </body>
 

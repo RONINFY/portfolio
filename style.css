@@ -121,6 +121,19 @@ body::-webkit-scrollbar {
     font-size: 2rem;
 }
 
+.icon-sapphire {
+    color: #1d9bf0;
+    text-shadow: 0 0 10px #1d9bf0;
+    font-size: 2rem;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .grand-total-text {
     display: flex;
     flex-direction: column;
@@ -173,12 +186,21 @@ body::-webkit-scrollbar {
     max-width: 800px;
 }
 
-/* Games Grid */
+.filter-hint {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--crimson-red);
+}
 
 /* Games Grid */
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    /* min(100%, 320px) prevents horizontal overflow on narrow phones */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
     gap: 2rem;
 }
 
@@ -193,6 +215,26 @@ body::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     height: 100%;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+a.game-card:hover,
+a.game-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+a.game-card:focus-visible {
+    outline: 2px solid var(--crimson-red);
+    outline-offset: 2px;
+}
+
+.grid-error {
+    color: var(--crimson-red);
+    text-align: center;
+    grid-column: 1 / -1;
 }
 
 .game-icon-wrapper {
@@ -268,6 +310,12 @@ body::-webkit-scrollbar {
     font-size: 1.1rem;
     color: var(--white);
 }
+
+/* Metric icon accent colors (referenced from the shared card renderer) */
+.mi-visits { color: var(--crimson-red); }
+.mi-playing { color: #1d9bf0; }
+.mi-likes { color: #00b894; }
+.mi-favorites { color: #fdcb6e; }
 
 .creator-tag {
     font-size: 0.85rem;
@@ -381,6 +429,11 @@ body::-webkit-scrollbar {
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
 }
 
+.role-card:focus-visible {
+    outline: 2px solid var(--crimson-red);
+    outline-offset: 2px;
+}
+
 .role-icon {
     width: 60px; height: 60px;
     border-radius: 12px;
@@ -485,6 +538,10 @@ body::-webkit-scrollbar {
 
 .contact-card:hover .external-icon, .copy-btn:hover { color: var(--white); }
 
+.copy-btn.copied { color: #00b894; }
+
+.email-address { word-break: break-all; }
+
 /* Footer */
 footer {
     text-align: center;
@@ -498,6 +555,13 @@ footer {
     .hero-name { font-size: 2.5rem; }
     .grand-total-container { flex-direction: column; text-align: center; padding: 1rem; }
     .grand-total-text { text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
 }
 
 /* ============================

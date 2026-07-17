@@ -1,245 +1,180 @@
 // ============================================================
 //  MAINTENANCE MODE  —  set to 1 to show the maintenance page
-//                        set to 0 to show the normal site
+//                       set to 0 to show the normal site
 // ============================================================
 const MAINTENANCE_MODE = 0;
 
-if (MAINTENANCE_MODE) {
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('maintenanceOverlay').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+const DISCORD_HANDLE = 'jxhnamerica';
+const R = window.PortfolioRender;
+
+// ------------------------------------------------------------
+//  Data hydration
+//  Normally GitHub Actions pre-renders everything into the HTML.
+//  If the markers still say "Loading", we fall back to:
+//    1. data.json (written by the same build script), then
+//    2. live Roblox APIs through a CORS proxy (local dev safety net).
+// ------------------------------------------------------------
+const getProxiedUrl = (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+
+const fetchJson = async (url) => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+    return res.json();
+};
+
+function applyData(data) {
+    const user = data.user || {};
+    if (user.avatarUrl) document.getElementById('userAvatar').src = user.avatarUrl;
+    if (user.name) document.getElementById('robloxUsername').textContent = user.name;
+    if (user.displayName) document.getElementById('robloxDisplayName').textContent = `@${user.displayName}`;
+
+    const games = data.games || [];
+    const totalVisits = games.reduce((sum, g) => sum + (g.visits || 0), 0);
+    document.getElementById('grandTotalVisits').textContent = R.formatFullNumber(totalVisits);
+    document.getElementById('grandTotalGames').textContent = data.gamesTested || games.length;
+    document.getElementById('gamesGrid').innerHTML = R.buildGamesHtml(games);
+}
+
+async function hydrateFromStaticData() {
+    applyData(await fetchJson('data.json'));
+}
+
+async function hydrateFromLiveApis() {
+    const config = await fetchJson('games.json');
+    const portfolioGames = config.games;
+    const userId = config.robloxUserId;
+
+    await Promise.all(portfolioGames.map(async (g) => {
+        if (!g.placeId || g.universeId) return;
+        try {
+            const uData = await fetchJson(getProxiedUrl(`https://apis.roblox.com/universes/v1/places/${g.placeId}/universe`));
+            g.universeId = uData.universeId;
+        } catch (e) {
+            console.warn(`Failed to resolve universe for place ${g.placeId}`);
+        }
+    }));
+
+    const universeIds = portfolioGames.map((g) => g.universeId).filter(Boolean).join(',');
+
+    const [userData, avatarData, detailsData, iconsData, votesData] = await Promise.all([
+        fetchJson(getProxiedUrl(`https://users.roblox.com/v1/users/${userId}`)).catch(() => ({})),
+        fetchJson(getProxiedUrl(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=true`)).catch(() => ({ data: [] })),
+        fetchJson(getProxiedUrl(`https://games.roblox.com/v1/games?universeIds=${universeIds}`)),
+        fetchJson(getProxiedUrl(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeIds}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false`)).catch(() => ({ data: [] })),
+        fetchJson(getProxiedUrl(`https://games.roblox.com/v1/games/votes?universeIds=${universeIds}`)).catch(() => ({ data: [] }))
+    ]);
+
+    const groupDetailsMap = {};
+    await Promise.all((detailsData.data || []).map(async (game) => {
+        if (!game.creator || game.creator.type !== 'Group') return;
+        try {
+            groupDetailsMap[game.id] = await fetchJson(getProxiedUrl(`https://groups.roblox.com/v1/groups/${game.creator.id}`));
+        } catch (e) {
+            console.warn(`Group fetch failed for "${game.name}"`);
+        }
+    }));
+
+    applyData({
+        user: {
+            name: userData.name,
+            displayName: userData.displayName,
+            avatarUrl: (avatarData.data && avatarData.data[0] && avatarData.data[0].imageUrl) || ''
+        },
+        games: R.mergeGamesData(portfolioGames, detailsData, iconsData, votesData, groupDetailsMap),
+        gamesTested: portfolioGames.length
     });
 }
 
-// Formatting helpers
-const formatNumber = (num) => {
-    if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B+';
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
-    return num.toLocaleString();
-};
-
-const formatFullNumber = (num) => {
-    return num.toLocaleString();
-};
-
-// Global Discord Function
-window.copyDiscord = function () {
-    navigator.clipboard.writeText("jxhnamerica");
-    alert("Discord ID copied to clipboard!");
-};
-
-// Fallback execution
-const ROBLOX_USER_ID = 9296222240; // John America
-const PORTFOLIO_GAMES = [
-    { placeId: 136577413998809, role: 'Beta Tester (commissioned)', category: 'commissioned', description: 'Tested mechanics and reported physics interaction bugs in flight mechanics during beta test.' }, // build plane
-    { placeId: 109932080383306, role: 'Tester (commissioned)', category: 'commissioned', description: 'Evaluated core gameplay loops during alpha test.' }, // Slap Brawl!
-    { placeId: 124910815181368, role: 'Beta Tester(commissioned)', category: 'commissioned', description: 'Tested and helped resolve visual bugs during testing phase, and gave advice to improve core gameplay loop' }, // [pillow]
-    { placeId: 94702395375549, role: 'Trade Update Tester (commissioned)', category: 'commissioned', description: 'Tested and helped find bugs pertaining to the trading system before the official release of the trade update' },
-    { placeId: 109021167563361, role: 'Tester (commissioned)', category: 'commissioned', description: 'Helped identify functional bugs during beta test.' }, //Build a tree factory
-    { isNDA: true, role: 'Full-time Staff (NDA)', category: 'formal', description: 'Dedicated QA lead for a high-priority, unannounced project.' }
-];
-
-
-const getProxiedUrl = (url) => {
-    return `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
-};
-
-async function runClientFallback() {
+async function hydrate() {
     try {
-        console.warn("SSG Pre-rendering not detected. Running Client-Side fallback...");
-
-        // Resolve any placeIds to universeIds first
-        await Promise.all(PORTFOLIO_GAMES.map(async (g) => {
-            if (g.placeId && !g.universeId) {
-                try {
-                    const uRes = await fetch(getProxiedUrl(`https://apis.roblox.com/universes/v1/places/${g.placeId}/universe`));
-                    if (uRes.ok) {
-                        const uData = await uRes.json();
-                        g.universeId = uData.universeId;
-                    }
-                } catch (e) {
-                    // Ignore fail
-                }
-            }
-        }));
-
-        const universeIds = PORTFOLIO_GAMES.map(g => g.universeId).filter(Boolean).join(',');
-
-        // Execute API Fetches
-        const [userRes, avatarRes, detailsRes, iconsRes, votesRes] = await Promise.all([
-            fetch(getProxiedUrl(`https://users.roblox.com/v1/users/${ROBLOX_USER_ID}`)),
-            fetch(getProxiedUrl(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${ROBLOX_USER_ID}&size=420x420&format=Png&isCircular=true`)),
-            fetch(getProxiedUrl(`https://games.roblox.com/v1/games?universeIds=${universeIds}`)),
-            fetch(getProxiedUrl(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeIds}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false`)),
-            fetch(getProxiedUrl(`https://games.roblox.com/v1/games/votes?universeIds=${universeIds}`))
-        ]);
-
-        const detailsData = await detailsRes.json();
-        const iconsData = await iconsRes.json();
-        const votesData = await votesRes.json();
-        const userData = await userRes.json();
-        const avatarData = await avatarRes.json();
-
-        // Populate User Info
-        if (userData.name) document.getElementById('robloxUsername').textContent = userData.name;
-        if (userData.displayName) document.getElementById('robloxDisplayName').textContent = `@${userData.displayName}`;
-        if (avatarData.data && avatarData.data.length > 0) {
-            const img = document.getElementById('userAvatar');
-            img.src = avatarData.data[0].imageUrl;
-        }
-
-        // Fetch Group data for Group-created games
-        const groupDetailsMap = {};
-        await Promise.all((detailsData.data || []).map(async (game) => {
-            if (game.creator.type === 'Group') {
-                try {
-                    const groupRes = await fetch(getProxiedUrl(`https://groups.roblox.com/v1/groups/${game.creator.id}`));
-                    const groupData = await groupRes.json();
-                    groupDetailsMap[game.id] = groupData;
-                } catch (e) {
-                    // Ignore group fetch fail
-                }
-            }
-        }));
-
-        // Merge Game Data
-        let gamesData = (detailsData.data || []).map(game => {
-            const iconObj = iconsData.data.find(icon => icon.targetId === game.id);
-            const voteObj = votesData.data.find(vote => vote.id === game.id);
-            const config = PORTFOLIO_GAMES.find(g => g.universeId === game.id) || {};
-            return {
-                ...game,
-                iconUrl: iconObj ? iconObj.imageUrl : '',
-                likes: voteObj ? voteObj.upVotes : 0,
-                role: config.role || 'QA',
-                category: config.category || 'commissioned',
-                isNDA: config.isNDA || false,
-                description: config.description || '',
-                groupDetails: groupDetailsMap[game.id] || null
-            };
-        }).concat(PORTFOLIO_GAMES.filter(g => g.isNDA).map(g => ({
-            name: "Unannounced",
-            creator: { name: "[REDACTED]" },
-            isNDA: true,
-            role: g.role,
-            category: g.category,
-            description: g.description,
-            visits: 0, playing: 0, likes: 0, favoritedCount: 0,
-            iconUrl: 'https://img.icons8.com/ios-filled/200/ffffff/lock.png'
-        })));
-
-        // Sort descending visits
-        gamesData.sort((a, b) => b.visits - a.visits);
-
-        let grandTotalVisits = gamesData.reduce((sum, game) => sum + game.visits, 0);
-        document.getElementById('grandTotalVisits').textContent = formatFullNumber(grandTotalVisits);
-
-        const gamesTestedElem = document.getElementById('grandTotalGames');
-        if (gamesTestedElem) {
-            gamesTestedElem.textContent = PORTFOLIO_GAMES.length;
-        }
-
-        // Render HTML Cards manually on client
-        const grid = document.getElementById('gamesGrid');
-        const fragment = document.createDocumentFragment();
-
-        gamesData.forEach((game, index) => {
-            const card = document.createElement('div');
-            card.className = 'game-card' + (game.isNDA ? ' nda' : '');
-            card.setAttribute('data-category', game.category);
-            if (!game.isNDA) {
-                card.onclick = () => window.open(`https://www.roblox.com/games/${game.rootPlaceId}`, '_blank');
-                card.style.cursor = 'pointer';
-            }
-
-            let creatorHtml = '';
-            if (game.creator.type === 'Group') {
-                const groupVerified = ((game.groupDetails && game.groupDetails.hasVerifiedBadge) || game.creator.hasVerifiedBadge)
-                    ? '<i class="fas fa-check-circle verified-icon" title="Verified Group"></i>' : '';
-                let ownerHtml = '';
-                if (game.groupDetails && game.groupDetails.owner) {
-                    const ownerVerified = game.groupDetails.owner.hasVerifiedBadge
-                        ? '<i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>' : '';
-                    ownerHtml = `<div class="creator-sub">By: ${game.groupDetails.owner.username} ${ownerVerified}</div>`;
-                }
-                creatorHtml = `<div class="creator-tag"><i class="fas fa-users"></i> ${game.creator.name} ${groupVerified}${ownerHtml}</div>`;
-            } else {
-                const verifiedTag = game.creator.hasVerifiedBadge
-                    ? '<i class="fas fa-check-circle verified-icon" title="Verified Creator"></i>' : '';
-                creatorHtml = `<div class="creator-tag"><i class="fas fa-user"></i> ${game.creator.name} ${verifiedTag}</div>`;
-            }
-
-            const descriptionHtml = game.description ? `<div class="contribution-desc">${game.description}</div>` : '';
-
-            card.innerHTML = `
-                <div class="game-icon-wrapper">
-                    <img src="${game.iconUrl}" alt="${game.name} Icon" class="game-icon" loading="lazy">
-                    <div class="qa-role-badge"><i class="fas fa-hammer"></i> ${game.role}</div>
-                </div>
-                <div class="game-info">
-                    <h3 class="game-title" title="${game.name}">${game.name}</h3>
-                    ${creatorHtml}
-                    ${descriptionHtml}
-                    <div class="metrics-grid">
-                        <div class="metric"><span class="metric-label"><i class="fas fa-globe-americas" style="color:var(--crimson-red)"></i> Visits</span><span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.visits)}</span></div>
-                        <div class="metric"><span class="metric-label"><i class="fas fa-users" style="color:#1d9bf0"></i> Playing</span><span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.playing)}</span></div>
-                        <div class="metric"><span class="metric-label"><i class="fas fa-thumbs-up" style="color:#00b894"></i> Likes</span><span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.likes)}</span></div>
-                        <div class="metric"><span class="metric-label"><i class="fas fa-star" style="color:#fdcb6e"></i> Favorites</span><span class="metric-value">${game.isNDA ? 'N/A' : formatNumber(game.favoritedCount)}</span></div>
-                    </div>
-                </div>
-            `;
-            fragment.appendChild(card);
-        });
-
-        grid.innerHTML = '';
-        grid.appendChild(fragment);
-
+        await hydrateFromStaticData();
+        return;
     } catch (e) {
-        console.error("Client fallback completely failed:", e);
-        document.getElementById('gamesGrid').innerHTML = `<p style="color:red; text-align:center;">Error loading live metrics. Please try again later.</p>`;
+        console.warn('data.json unavailable, falling back to live Roblox APIs...');
+    }
+    try {
+        await hydrateFromLiveApis();
+    } catch (e) {
+        console.error('Live API fallback failed:', e);
+        document.getElementById('gamesGrid').innerHTML =
+            '<p class="grid-error">Could not load live metrics. Please refresh in a moment.</p>';
     }
 }
 
-// Bootstrap
-document.addEventListener('DOMContentLoaded', () => {
-    // If the HTML explicitly says 'Loading...', it means GitHub Actions failed to natively pre-render the data 
-    // (or you're developing locally). We fall back to old client-side fetching as a bulletproof safety net!
-    if (!MAINTENANCE_MODE) {
-        const testVisits = document.getElementById('grandTotalVisits');
-        if (testVisits && testVisits.textContent.includes('Loading')) {
-            runClientFallback();
-        }
-    }
-});
-
-// Filter function for Role cards
-window.filterGames = function (category) {
-    const cards = document.querySelectorAll('.game-card');
-    const triggerBtn = document.querySelector(`.role-card[onclick*="${category}"]`);
+// ------------------------------------------------------------
+//  Category filter (role cards)
+// ------------------------------------------------------------
+function setupFilters() {
+    const roleCards = document.querySelectorAll('.role-card[data-filter]');
     const title = document.getElementById('portfolioTitle');
+    const TITLES = { commissioned: 'QA Commissions', formal: 'QA Staff Roles' };
 
-    // Toggle OFF
-    if (triggerBtn && triggerBtn.classList.contains('active-filter')) {
-        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-filter'));
-        cards.forEach(card => card.style.display = 'block');
-        if (title) title.textContent = 'Overall QA Portfolio';
+    const applyFilter = (category) => {
+        document.querySelectorAll('.game-card').forEach((card) => {
+            // '' restores the stylesheet value so flex cards don't become block
+            card.style.display = (!category || card.dataset.category === category) ? '' : 'none';
+        });
+        roleCards.forEach((c) => {
+            const active = c.dataset.filter === category;
+            c.classList.toggle('active-filter', active);
+            c.setAttribute('aria-pressed', String(active));
+        });
+        if (title) title.textContent = category ? TITLES[category] : 'Overall QA Portfolio';
+    };
+
+    roleCards.forEach((card) => {
+        const toggle = () => applyFilter(card.classList.contains('active-filter') ? null : card.dataset.filter);
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle();
+            }
+        });
+    });
+}
+
+// ------------------------------------------------------------
+//  Discord copy button
+// ------------------------------------------------------------
+function setupCopyButton() {
+    const btn = document.getElementById('copyDiscordBtn');
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    let resetTimer;
+
+    btn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(DISCORD_HANDLE);
+        } catch (e) {
+            window.prompt('Copy my Discord handle:', DISCORD_HANDLE);
+            return;
+        }
+        btn.classList.add('copied');
+        icon.className = 'fas fa-check';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => {
+            btn.classList.remove('copied');
+            icon.className = 'fas fa-copy';
+        }, 2000);
+    });
+}
+
+// ------------------------------------------------------------
+//  Bootstrap
+// ------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    if (MAINTENANCE_MODE) {
+        document.getElementById('maintenanceOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
         return;
     }
 
-    // Toggle ON
-    document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-filter'));
-    if (triggerBtn) triggerBtn.classList.add('active-filter');
+    setupFilters();
+    setupCopyButton();
 
-    if (title) {
-        title.textContent = category === 'commissioned' ? 'QA Commissions' : 'QA Staff Roles';
+    const totals = document.getElementById('grandTotalVisits');
+    if (totals && totals.textContent.includes('Loading')) {
+        hydrate();
     }
-
-    cards.forEach(card => {
-        if (card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-};
+});

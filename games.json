@@ -1,0 +1,16 @@
+{
+    "robloxUserId": 9296222240,
+    "games": [
+        { "placeId": 136577413998809, "role": "Beta Tester", "category": "commissioned", "description": "Tested mechanics and reported physics interaction bugs in flight mechanics during the beta test." },
+        { "placeId": 109932080383306, "role": "Tester", "category": "commissioned", "description": "Evaluated core gameplay loops during the alpha test." },
+        { "placeId": 124910815181368, "role": "Beta Tester", "category": "commissioned", "description": "Helped resolve visual bugs during the testing phase and gave advice to improve the core gameplay loop." },
+        { "placeId": 94702395375549, "role": "Trade Update Tester", "category": "commissioned", "description": "Found and reported bugs in the trading system before the official release of the trade update." },
+        { "placeId": 109021167563361, "role": "Tester", "category": "commissioned", "description": "Helped identify functional bugs during the beta test." },
+        { "placeId": 71350675430720, "role": "Tester", "category": "commissioned", "description": "Helped identify functional bugs during the beta test." },
+        { "placeId": 118554850501976, "role": "Tester", "category": "commissioned", "description": "Helped identify functional bugs during the beta test." },
+        { "placeId": 115872975504419, "role": "INDEV Tester", "category": "commissioned", "description": "Helped identify functional bugs during early development." },
+        { "placeId": 93998278396472, "role": "INDEV Tester", "category": "commissioned", "description": "Contributed QA testing during early development." },
+        { "placeId": 74621494127688, "role": "INDEV Tester", "category": "commissioned", "description": "Contributed QA testing during early development." },
+        { "isNDA": true, "role": "Tester", "category": "formal", "description": "QA tester for an unannounced project under NDA." }
+    ]
+}
